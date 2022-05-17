@@ -1,0 +1,50 @@
+#!python
+
+# Standard Library
+import imp
+import os
+from collections import defaultdict
+
+ENV = Environment(ENV=os.environ)
+
+config = imp.load_source('config', 'config.py')
+
+data = defaultdict(lambda: defaultdict(dict))
+
+for name in config.names:
+    for subset in config.subsets:
+
+        data[subset][name]['raw'] = f'data/{name}_{subset}_raw.txt'
+        data[subset][name]['tokenized'] = f'data/{name}_{subset}_tokenized.txt'
+
+root = 'data/'
+processed = root + 'processed.txt'
+ENV.Command(processed, [
+    data['valid']['src']['tokenized'], data['valid']['tgt']['tokenized'],
+    data['train']['src']['tokenized'], data['train']['tgt']['tokenized']
+], ('onmt_preprocess '
+    ' --overwrite '
+    ' --shard_size 500000 '
+    ' --num_threads 16 '
+    f' --src_vocab_size {config.vocab_size} '
+    f' --tgt_vocab_size {config.vocab_size} '
+    '--valid_src ${SOURCES[0]} '
+    '--valid_tgt ${SOURCES[1]} '
+    '--train_src ${SOURCES[2]} '
+    '--train_tgt ${SOURCES[3]} '
+    '--save_data $TARGETS ') +
+            '&& if [ ! -f $TARGET ];then echo "complete" > $TARGET;fi ')
+
+saved_model = os.path.join(root, 'checkpoints/checkpoint')
+logdir = os.path.join(root, 'log')
+logfile = os.path.join(root,
+                       'training_log_{}.txt'.format(config.log_file_level))
+
+ENV.Command(logfile, processed,
+            (('onmt_train '
+              '--data $SOURCES '
+              '--gpu_ranks 0 '
+              '--tensorboard ') + (' --save_model %s ' % saved_model) +
+             (' --log_file_level %s ' % config.log_file_level) +
+             (' --tensorboard_log_dir %s_tf ' % logdir) +
+             (' --log_file  $TARGET ') + config.training_string))
