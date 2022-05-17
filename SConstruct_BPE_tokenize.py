@@ -45,7 +45,12 @@ print(command_shuffle_datast)
 result = subprocess.check_output(command_shuffle_datast, shell=True)
 
 full_shufle = pd.read_csv(f'{temp_full_for_shuffle}', sep="\t", header=None, names=['src','tgt'])
-
+full_shufle = full_shufle[full_shufle['src'].apply(lambda x: len(str(x))>1)]
+full_shufle = full_shufle[full_shufle['src'].apply(lambda x: len(str(x))<5000)]
+full_shufle = full_shufle[full_shufle['src'].apply(lambda x: len(str(x).split())<500)]
+full_shufle = full_shufle[full_shufle['tgt'].apply(lambda x: len(str(x))>1)]
+full_shufle = full_shufle[full_shufle['tgt'].apply(lambda x: len(str(x))<5000)]
+full_shufle = full_shufle[full_shufle['tgt'].apply(lambda x: len(str(x).split())<500)]
 #try:
 #    assert full_shufle.src.isnull().sum() == 0
 #    assert full_shufle.tgt.isnull().sum() == 0
