@@ -38,7 +38,7 @@ training_opts = {
     'param_init_glorot': '',
     'normalization': "tokens",
     'save_checkpoint_steps': 2000,
-    'train_steps': 300000,
+    'train_steps': 400000,
     'valid_batch_size': 8,
     'valid_steps': 2000
 }

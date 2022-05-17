@@ -1,6 +1,6 @@
 #!/bin/bash
 cd data/checkpoints
-step=230000
+step=400000
 onmt_average_models -models  checkpoint_step_$(($step-18000)).pt checkpoint_step_$(($step-16000)).pt checkpoint_step_$(($step-14000)).pt checkpoint_step_$(($step-12000)).pt checkpoint_step_$(($step-10000)).pt checkpoint_step_$(($step-8000)).pt checkpoint_step_$(($step-6000)).pt checkpoint_step_$(($step-4000)).pt checkpoint_step_$(($step-2000)).pt checkpoint_step_$(($step)).pt -o average$step
 
 cd ../..
