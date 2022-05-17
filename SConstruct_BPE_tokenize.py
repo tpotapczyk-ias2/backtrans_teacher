@@ -78,7 +78,6 @@ for name in config.names:
 
     command_BPE_tokenize = f"yttm encode --model {data[name]['bpe_model']} --output_type subword < {data['full'][name]['base_tokenized']} > {data['full'][name]['bpe_tokenized']}"
     print(command_BPE_tokenize)
-    result = subprocess.check_output('mkdir backtrans', shell=True)
     subprocess.check_output(command_shuffle_datast, shell=True)
     for subset in config.subsets:
 
