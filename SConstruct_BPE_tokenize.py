@@ -82,9 +82,9 @@ for name in config.names:
     for subset in config.subsets:
 
         if subset == 'train':
-            command_train_valid = f"head -n -{config.valid_sentences} {data['full'][name]['bpe_tokenized']} > {backtrans/data[subset][name]['tokenized']}"
+            command_train_valid = f"head -n -{config.valid_sentences} {data['full'][name]['bpe_tokenized']} > {data[subset][name]['tokenized']}"
         elif subset == 'valid':
-            command_train_valid = f"tail -n -{config.valid_sentences} {data['full'][name]['bpe_tokenized']} > {backtrans/data[subset][name]['tokenized']}"
+            command_train_valid = f"tail -n -{config.valid_sentences} {data['full'][name]['bpe_tokenized']} > {data[subset][name]['tokenized']}"
         else:
             raise ValueError
         
